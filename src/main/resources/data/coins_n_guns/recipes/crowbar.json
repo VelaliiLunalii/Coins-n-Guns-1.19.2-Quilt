@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "  I",
+    "II ",
+    "I  "
+  ],
+  "result": {
+    "item": "coins_n_guns:crowbar"
+  }
+}

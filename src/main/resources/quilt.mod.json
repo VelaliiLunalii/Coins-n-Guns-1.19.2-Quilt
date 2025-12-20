@@ -2,11 +2,11 @@
 	"schema_version": 1,
 	"quilt_loader": {
 		"group": "io.github.velaliilunalii",
-		"id": "vegetarianism",
+		"id": "coins_n_guns",
 		"version": "${version}",
 		"metadata": {
-			"name": "Vegetarianism",
-			"description": "Animal friendly way to obtain their drops.",
+			"name": "Fisn 'n' Friends",
+			"description": "Intricate and vanilla-friendly ranged weapons and ammo system",
 			"contributors": {
 				"Velalii Lunalii": "Owner"
 			},
@@ -15,15 +15,15 @@
 				"issues": "https://github.com/QuiltMC/quilt-template-mod/issues",
 				"sources": "https://github.com/QuiltMC/quilt-template-mod"
 			},
-			"icon": "assets/vegetarianism/icon.png"
+			"icon": "assets/coins_n_guns/icon.png"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
 			"init": [
-				"io.github.velaliilunalii.vegetarianism.Vegetarianism"
+				"io.github.velaliilunalii.coins_n_guns.CoinsNGuns"
 			],
 			"client_init": [
-				"io.github.velaliilunalii.vegetarianism.VegetarianismClient"
+				"io.github.velaliilunalii.coins_n_guns.CoinsNGunsClient"
 			]
 		},
 		"depends": [
@@ -41,5 +41,5 @@
 			}
 		]
 	},
-	"mixin": "vegetarianism.mixins.json"
+	"mixin": "coins_n_guns.mixins.json"
 }

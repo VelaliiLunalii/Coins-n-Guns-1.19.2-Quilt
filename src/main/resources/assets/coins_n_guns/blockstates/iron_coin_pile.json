@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "coins_n_guns:block/iron_coin_pile"
+    }
+  }
+}
