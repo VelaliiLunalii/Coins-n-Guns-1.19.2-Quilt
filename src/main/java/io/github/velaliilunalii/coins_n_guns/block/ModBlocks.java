@@ -5,6 +5,7 @@ import io.github.velaliilunalii.coins_n_guns.item.ModItemGroups;
 import io.github.velaliilunalii.coins_n_guns.sound.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -68,6 +69,14 @@ public class ModBlocks {
 	public static final Block IRON_COIN_PILE = new CoinPileBlock(QuiltBlockSettings.copyOf(Blocks.MOSS_CARPET).hardness(0.01f).sounds(ModSounds.COIN_BREAK_GROUP), CoinPileBlock.CoinTypes.IRON);
 	public static final Block GOLD_COIN_PILE = new CoinPileBlock(QuiltBlockSettings.copyOf(Blocks.MOSS_CARPET).hardness(0.01f).sounds(ModSounds.COIN_BREAK_GROUP), CoinPileBlock.CoinTypes.GOLD);
 
+	public static final Block MAGNETITE_BLOCK = new MagnetiteBlock(QuiltBlockSettings.copyOf(Blocks.IRON_BLOCK));
+	public static final Block MAGNETIC_COIL = new PillarBlock(QuiltBlockSettings.copyOf(Blocks.IRON_BLOCK));
+	public static final Block WEAK_MAGNETIC_COIL = new PillarBlock(QuiltBlockSettings.copyOf(Blocks.IRON_BLOCK));
+	public static final Block STRONG_MAGNETIC_COIL = new PillarBlock(QuiltBlockSettings.copyOf(Blocks.IRON_BLOCK));
+	public static final Block PHASE_BLOCK = new PhaseBlock(QuiltBlockSettings.copyOf(Blocks.GLASS).nonOpaque());
+	public static final Block INVERTED_PHASE_BLOCK = new InvertedPhaseBlock(QuiltBlockSettings.copyOf(Blocks.GLASS).nonOpaque());
+	public static final Block RESONATOR_BLOCK = new ResonatorBlock(QuiltBlockSettings.copyOf(Blocks.IRON_BLOCK));
+
 	public static void register(ModContainer mod) {
 		wooden_and_mossy_crates_maker(mod);
 
@@ -87,5 +96,28 @@ public class ModBlocks {
 		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "gold_coin_pile"), GOLD_COIN_PILE);
 		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "gold_coin_pile"),
 			new BlockItem(GOLD_COIN_PILE, new QuiltItemSettings()));
+
+		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "magnetite_block"), MAGNETITE_BLOCK);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "magnetite_block"),
+			new BlockItem(MAGNETITE_BLOCK, new QuiltItemSettings().group(ModItemGroups.COINS_N_GUNS_GROUP)));
+		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "magnetic_coil"), MAGNETIC_COIL);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "magnetic_coil"),
+			new BlockItem(MAGNETIC_COIL, new QuiltItemSettings().group(ModItemGroups.COINS_N_GUNS_GROUP)));
+		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "weak_magnetic_coil"), WEAK_MAGNETIC_COIL);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "weak_magnetic_coil"),
+			new BlockItem(WEAK_MAGNETIC_COIL, new QuiltItemSettings().group(ModItemGroups.COINS_N_GUNS_GROUP)));
+		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "strong_magnetic_coil"), STRONG_MAGNETIC_COIL);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "strong_magnetic_coil"),
+			new BlockItem(STRONG_MAGNETIC_COIL, new QuiltItemSettings().group(ModItemGroups.COINS_N_GUNS_GROUP)));
+
+		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "phase_block"), PHASE_BLOCK);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "phase_block"),
+			new BlockItem(PHASE_BLOCK, new QuiltItemSettings().group(ModItemGroups.COINS_N_GUNS_GROUP)));
+		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "inverted_phase_block"), INVERTED_PHASE_BLOCK);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "inverted_phase_block"),
+			new BlockItem(INVERTED_PHASE_BLOCK, new QuiltItemSettings().group(ModItemGroups.COINS_N_GUNS_GROUP)));
+		Registry.register(Registry.BLOCK, new Identifier(mod.metadata().id(), "resonator_block"), RESONATOR_BLOCK);
+		Registry.register(Registry.ITEM, new Identifier(mod.metadata().id(), "resonator_block"),
+			new BlockItem(RESONATOR_BLOCK, new QuiltItemSettings().group(ModItemGroups.COINS_N_GUNS_GROUP)));
 	}
 }

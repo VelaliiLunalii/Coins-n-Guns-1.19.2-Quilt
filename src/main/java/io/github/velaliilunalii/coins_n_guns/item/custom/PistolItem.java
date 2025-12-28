@@ -44,102 +44,24 @@ public class PistolItem extends CrossbowItem {
 		stack.isOf(ModItems.GOLD_COIN) || stack.isOf(ModItems.IRON_COIN) || stack.isOf(ModItems.COPPER_COIN);
 	private boolean charged = false;
 	private boolean loaded = false;
-	private int tax_evasion_cd = 0;
-
-	@Override
-	public boolean isEnchantable(ItemStack stack) {
-		return true;
-	}
-
-	public static int getAmmo(ItemStack stack) {
-		NbtCompound nbtCompound = stack.getNbt();
-		if (nbtCompound == null) return 0;
-		return nbtCompound.getInt("Ammo");
-	}
-
-	public static void setAmmo(ItemStack stack, int ammo) {
-		NbtCompound nbtCompound = stack.getOrCreateNbt();
-		nbtCompound.putInt("Ammo", ammo);
-	}
-
-	public static boolean isCharged(ItemStack stack) {
-		NbtCompound nbtCompound = stack.getNbt();
-		return nbtCompound != null && nbtCompound.getBoolean("Charged");
-	}
-
-	public static void setCharged(ItemStack stack, boolean charged) {
-		NbtCompound nbtCompound = stack.getOrCreateNbt();
-		nbtCompound.putBoolean("Charged", charged);
-	}
-
-	public static int getTaxEvasionCD(ItemStack stack) {
-		NbtCompound nbtCompound = stack.getNbt();
-		if (nbtCompound == null) return 0;
-		return nbtCompound.getInt("Tax_evasion_cd");
-	}
-
-	public static void setTaxEvasionCD(ItemStack stack, int tax_evasion_cd) {
-		NbtCompound nbtCompound = stack.getOrCreateNbt();
-		nbtCompound.putInt("Tax_evasion_cd", tax_evasion_cd);
-	}
-
-	public static void decrementTaxEvasionCD(ItemStack stack, int decrement) {
-		NbtCompound nbtCompound = stack.getOrCreateNbt();
-		int tax_evasion_cd = getTaxEvasionCD(stack);
-		nbtCompound.putInt("Tax_evasion_cd", Math.max(tax_evasion_cd - decrement, 0));
-	}
-
-	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-		super.inventoryTick(stack, world, entity, slot, selected);
-		if(getTaxEvasionCD(stack) > 0) decrementTaxEvasionCD(stack, 1);
-	}
 
 	public PistolItem(Settings settings) {
 		super(settings);
 	}
 
-	private static List<ItemStack> getProjectiles(ItemStack crossbow) {
-		List<ItemStack> list = Lists.newArrayList();
-		NbtCompound nbtCompound = crossbow.getNbt();
-		if (nbtCompound != null && nbtCompound.contains("ChargedProjectiles", 9)) {
-			NbtList nbtList = nbtCompound.getList("ChargedProjectiles", 10);
-			if (nbtList != null) {
-				for(int i = 0; i < nbtList.size(); ++i) {
-					NbtCompound nbtCompound2 = nbtList.getCompound(i);
-					list.add(ItemStack.fromNbt(nbtCompound2));
-				}
-			}
-		}
+	//----------------------load logic----------------------------
 
-		return list;
-	}
-
-	//->getPullProgress
-	//->loadProjectiles
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 		int i = this.getMaxUseTime(stack) - remainingUseTicks;
 		float f = getPullProgress(i, stack);
 		if (f >= 1.0F && !isCharged(stack) && loadProjectiles(user, stack)) {
 			setCharged(stack, true);
-			setAmmo(stack, 3);
+			setAmmo(stack, getMaxAmmo());
 			SoundCategory soundCategory = user instanceof PlayerEntity ? SoundCategory.PLAYERS : SoundCategory.HOSTILE;
 			world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), ModSounds.COIN_INSERT, soundCategory, 1F, 1.2F);
 		}
-
 	}
 
-	public static float getPullProgress(int useTicks, ItemStack stack) {
-		float f = (float)useTicks / (float)getPullTime(stack);
-		if (f > 1.0F) {
-			f = 1.0F;
-		}
-
-		return f;
-	}
-
-	//->lookupLoadAmmo
-	//->loadProjectile
 	private static boolean loadProjectiles(LivingEntity shooter, ItemStack stack) {
 		int i = EnchantmentHelper.getLevel(Enchantments.MULTISHOT, stack);
 		int j = i == 0 ? 1 : 3;
@@ -205,7 +127,6 @@ public class PistolItem extends CrossbowItem {
 		return false;
 	}
 
-	//->putProjectile
 	private static void loadProjectile(LivingEntity shooter, ItemStack crossbow, ItemStack projectile, boolean multishotCopy, boolean creative, boolean fromPouch) {
 		ItemStack itemStack;
 		if (!creative && !fromPouch) {
@@ -237,8 +158,8 @@ public class PistolItem extends CrossbowItem {
 		nbtCompound.put("ChargedProjectiles", nbtList);
 	}
 
-	//->getSpeed
-	//->shootAll
+	//----------------------use logic----------------------------
+
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		ItemStack itemStack = user.getStackInHand(hand);
@@ -269,13 +190,35 @@ public class PistolItem extends CrossbowItem {
 		}
 	}
 
-	private static float getSpeed(ItemStack stack) {
-		return 3.15F;
+	//TODO sound playing logic to account for 2 max ammo and not 3
+	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
+		if (!world.isClient) {float f = (float)(stack.getMaxUseTime() - remainingUseTicks) / (float)getPullTime(stack);
+			if (f < 0.2F) {
+				this.charged = false;
+				this.loaded = false;
+			}
+
+			if (f >= 0.2F && !this.charged) {
+				this.charged = true;
+				world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), ModSounds.COIN_INSERT, SoundCategory.PLAYERS, 1F, 0.8F);
+			}
+
+			if (f >= 0.5F && !this.loaded) {
+				this.loaded = true;
+				if (getMaxAmmo() == 3) world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), ModSounds.COIN_INSERT, SoundCategory.PLAYERS, 1F, 1F);
+			}
+		}
+
 	}
 
-	//->getSoundPitches
-	//->shoot
-	//->postShoot
+	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+		super.inventoryTick(stack, world, entity, slot, selected);
+		if(getTaxEvasionCD(stack) > 0) decrementTaxEvasionCD(stack, 1);
+	}
+
+	//----------------------shooting logic----------------------------
+
 	public static void shootAll(World world, LivingEntity entity, Hand hand, ItemStack stack, float speed, float divergence) {
 		List<ItemStack> list = getProjectiles(stack);
 		float[] fs = getSoundPitches(entity.getRandom());
@@ -305,17 +248,7 @@ public class PistolItem extends CrossbowItem {
 		}
 	}
 
-	//->getSoundPitch
-	private static float[] getSoundPitches(RandomGenerator random) {
-		boolean bl = random.nextBoolean();
-		return new float[]{1.0F, getSoundPitch(bl, random), getSoundPitch(!bl, random)};
-	}
-
-	private static float getSoundPitch(boolean flag, RandomGenerator random) {
-		float f = flag ? 0.63F : 0.43F;
-		return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
-	}
-
+	//TODO refactor all coins into one
 	private static void shoot(World world, LivingEntity shooter, Hand hand, ItemStack crossbow, ItemStack projectile, float soundPitch, boolean creative, float speed, float divergence, float simulated) {
 		if (!world.isClient) {
 			int i = EnchantmentHelper.getLevel(Enchantments.PIERCING, crossbow);
@@ -401,7 +334,6 @@ public class PistolItem extends CrossbowItem {
 		}
 	}
 
-	//->clearProjectiles
 	private static void postShoot(World world, LivingEntity entity, ItemStack stack) {
 		if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
 			if (!world.isClient) {
@@ -424,26 +356,7 @@ public class PistolItem extends CrossbowItem {
 
 	}
 
-	//->getQuickChargeSound
-	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		if (!world.isClient) {float f = (float)(stack.getMaxUseTime() - remainingUseTicks) / (float)getPullTime(stack);
-			if (f < 0.2F) {
-				this.charged = false;
-				this.loaded = false;
-			}
-
-			if (f >= 0.2F && !this.charged) {
-				this.charged = true;
-				world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), ModSounds.COIN_INSERT, SoundCategory.PLAYERS, 1F, 0.8F);
-			}
-
-			if (f >= 0.5F && !this.loaded) {
-				this.loaded = true;
-				world.playSound((PlayerEntity)null, user.getX(), user.getY(), user.getZ(), ModSounds.COIN_INSERT, SoundCategory.PLAYERS, 1F, 1F);
-			}
-		}
-
-	}
+	//----------------------client logic----------------------------
 
 	private SoundEvent getQuickChargeSound(int stage) {
 		switch (stage) {
@@ -489,5 +402,95 @@ public class PistolItem extends CrossbowItem {
 				.append(Text.literal(" for pouch info"))
 				.styled(style -> style.withColor(Formatting.GRAY)));
 		}
+	}
+
+	//----------------------setters/getters----------------------------
+
+	private static List<ItemStack> getProjectiles(ItemStack crossbow) {
+		List<ItemStack> list = Lists.newArrayList();
+		NbtCompound nbtCompound = crossbow.getNbt();
+		if (nbtCompound != null && nbtCompound.contains("ChargedProjectiles", 9)) {
+			NbtList nbtList = nbtCompound.getList("ChargedProjectiles", 10);
+			if (nbtList != null) {
+				for(int i = 0; i < nbtList.size(); ++i) {
+					NbtCompound nbtCompound2 = nbtList.getCompound(i);
+					list.add(ItemStack.fromNbt(nbtCompound2));
+				}
+			}
+		}
+
+		return list;
+	}
+
+	public static float getPullProgress(int useTicks, ItemStack stack) {
+		float f = (float)useTicks / (float)getPullTime(stack);
+		if (f > 1.0F) {
+			f = 1.0F;
+		}
+
+		return f;
+	}
+
+	private static float getSpeed(ItemStack stack) {
+		return 3.15F;
+	}
+
+	private static float[] getSoundPitches(RandomGenerator random) {
+		boolean bl = random.nextBoolean();
+		return new float[]{1.0F, getSoundPitch(bl, random), getSoundPitch(!bl, random)};
+	}
+
+	private static float getSoundPitch(boolean flag, RandomGenerator random) {
+		float f = flag ? 0.63F : 0.43F;
+		return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
+	}
+
+	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return true;
+	}
+
+	public int getMaxAmmo (){
+		return 3;
+	}
+
+	//----------------------nbt setters/getters----------------------------
+
+	public static int getAmmo(ItemStack stack) {
+		NbtCompound nbtCompound = stack.getNbt();
+		if (nbtCompound == null) return 0;
+		return nbtCompound.getInt("Ammo");
+	}
+
+	public static void setAmmo(ItemStack stack, int ammo) {
+		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		nbtCompound.putInt("Ammo", ammo);
+	}
+
+	public static boolean isCharged(ItemStack stack) {
+		NbtCompound nbtCompound = stack.getNbt();
+		return nbtCompound != null && nbtCompound.getBoolean("Charged");
+	}
+
+	public static void setCharged(ItemStack stack, boolean charged) {
+		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		nbtCompound.putBoolean("Charged", charged);
+	}
+
+	public static int getTaxEvasionCD(ItemStack stack) {
+		NbtCompound nbtCompound = stack.getNbt();
+		if (nbtCompound == null) return 0;
+		return nbtCompound.getInt("Tax_evasion_cd");
+	}
+
+	public static void setTaxEvasionCD(ItemStack stack, int tax_evasion_cd) {
+		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		nbtCompound.putInt("Tax_evasion_cd", tax_evasion_cd);
+	}
+
+	public static void decrementTaxEvasionCD(ItemStack stack, int decrement) {
+		NbtCompound nbtCompound = stack.getOrCreateNbt();
+		int tax_evasion_cd = getTaxEvasionCD(stack);
+		nbtCompound.putInt("Tax_evasion_cd", Math.max(tax_evasion_cd - decrement, 0));
 	}
 }

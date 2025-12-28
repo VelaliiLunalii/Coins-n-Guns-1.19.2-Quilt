@@ -33,5 +33,23 @@ public class ModModelPredicateProvider {
 			(itemStack, clientWorld, livingEntity, seed) -> {
 				return PistolItem.getAmmo(itemStack) == 2 ? 1.0F : 0.0F;
 			});
+
+		ModelPredicateProviderRegistry.register(ModItems.SILVER_PISTOL, new Identifier(CoinsNGuns.MOD_ID, "pulling"),
+			(itemStack, clientWorld, livingEntity, seed) -> {
+				return livingEntity instanceof PlayerEntity player && player.getItemUseTime() > 0 ? 1.0F : 0.0F;
+			});
+		ModelPredicateProviderRegistry.register(ModItems.SILVER_PISTOL, new Identifier(CoinsNGuns.MOD_ID, "pull"),
+			(itemStack, clientWorld, livingEntity, seed) -> {
+				return livingEntity instanceof PlayerEntity player ?
+					PistolItem.getPullProgress(player.getItemUseTime(), itemStack) : 0.0F;
+			});
+		ModelPredicateProviderRegistry.register(ModItems.SILVER_PISTOL, new Identifier(CoinsNGuns.MOD_ID, "charged"),
+			(itemStack, clientWorld, livingEntity, seed) -> {
+				return PistolItem.isCharged(itemStack) ? 1.0F : 0.0F;
+			});
+		ModelPredicateProviderRegistry.register(ModItems.SILVER_PISTOL, new Identifier(CoinsNGuns.MOD_ID, "one_ammo"),
+			(itemStack, clientWorld, livingEntity, seed) -> {
+				return PistolItem.getAmmo(itemStack) == 1 ? 1.0F : 0.0F;
+			});
 	}
 }

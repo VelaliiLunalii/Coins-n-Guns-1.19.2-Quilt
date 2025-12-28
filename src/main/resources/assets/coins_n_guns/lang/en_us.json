@@ -1,7 +1,9 @@
 {
   "item.coins_n_guns.magnetic_fishing_rod": "Magnetic Fishing Rod",
   "item.coins_n_guns.magnet": "Magnet",
+  "item.coins_n_guns.magnetite": "Magnetite",
   "item.coins_n_guns.gilded_pistol": "Gilded Pistol",
+  "item.coins_n_guns.silver_pistol": "Silver Pistol",
   "item.coins_n_guns.copper_coin": "Copper Coin",
   "item.coins_n_guns.iron_coin": "Iron Coin",
   "item.coins_n_guns.gold_coin": "Gold Coin",
@@ -13,6 +15,7 @@
   "item.coins_n_guns.gilded_pistol_grip": "Gilded Pistol Grip",
   "item.coins_n_guns.gilded_pistol_barrel": "Gilded Pistol Barrel",
   "item.coins_n_guns.philosophers_stone": "Philosopher's Stone",
+  "item.coins_n_guns.magnetic_shield": "Magnetic Shield",
 
   "block.coins_n_guns.spruce_crate": "Spruce Crate",
   "block.coins_n_guns.oak_crate": "Oak Crate",
@@ -37,6 +40,12 @@
   "block.coins_n_guns.copper_coin_pile": "Copper Coin Pile",
   "block.coins_n_guns.iron_coin_pile": "Iron Coin Pile",
   "block.coins_n_guns.gold_coin_pile": "Gold Coin Pile",
+  "block.coins_n_guns.magnetite_block": "Magnetite Block",
+  "block.coins_n_guns.magnetic_coil": "Magnetic Coil",
+  "block.coins_n_guns.weak_magnetic_coil": "Weak Magnetic Coil",
+  "block.coins_n_guns.strong_magnetic_coil": "Strong Magnetic Coil",
+  "block.coins_n_guns.phase_block": "Phase Block",
+  "block.coins_n_guns.inverted_phase_block": "Inverted Phase Block",
 
   "subtitle.coins_n_guns.coin_break": "Coin Break",
   "subtitle.coins_n_guns.coin_shoot": "Coin Shoot",

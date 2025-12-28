@@ -1,10 +1,7 @@
 package io.github.velaliilunalii.coins_n_guns.entity;
 
 import io.github.velaliilunalii.coins_n_guns.CoinsNGuns;
-import io.github.velaliilunalii.coins_n_guns.entity.custom.CopperCoinProjectileEntity;
-import io.github.velaliilunalii.coins_n_guns.entity.custom.GoldCoinProjectileEntity;
-import io.github.velaliilunalii.coins_n_guns.entity.custom.IronCoinProjectileEntity;
-import io.github.velaliilunalii.coins_n_guns.entity.custom.MagneticFishingRodBobberEntity;
+import io.github.velaliilunalii.coins_n_guns.entity.custom.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -54,6 +51,18 @@ public class ModEntities {
 				.trackRangeChunks(4).trackedUpdateRate(10)
 				.build()
 		);
+
+	public static final EntityType<MagneticFieldEntity> MAGNETIC_FIELD =
+		Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier(CoinsNGuns.MOD_ID, "magnetic_field"),
+			FabricEntityTypeBuilder.<MagneticFieldEntity>create(
+				SpawnGroup.MISC, MagneticFieldEntity::new)
+			.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+			.trackRangeBlocks(64)
+			.trackedUpdateRate(1)
+			.build()
+	);
 
 	public static void register() {
 	}

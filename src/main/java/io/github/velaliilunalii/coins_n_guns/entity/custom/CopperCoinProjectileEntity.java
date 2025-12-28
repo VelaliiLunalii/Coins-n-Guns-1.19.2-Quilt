@@ -35,18 +35,22 @@ import net.minecraft.world.event.GameEvent;
 import java.util.List;
 
 public class CopperCoinProjectileEntity extends ThrownEntity {
+	private float gravity = 0.03F;
 	public CopperCoinProjectileEntity(LivingEntity shooter, World world) {
 		super(ModEntities.COPPER_COIN_PROJECTILE, shooter, world);
 	}
 
 	public float getSpeed(){return 3F;}
 	@Override
-	public float getGravity(){return 0.03F;}
+	public float getGravity(){return gravity;}
 	public float getDamage(){
 		int crimson_pouch_bonus = getPouchType().equalsIgnoreCase("Crimson") ? 2 : 0;
 		int multishot_copy_penalty = getMultishotCopy() ? -2 : 0;
-		return 4F + crimson_pouch_bonus + multishot_copy_penalty;
+		int magnetic_field_increased = getMagneticFieldIncrease() ? 2 : 0;
+		return 4F + crimson_pouch_bonus + multishot_copy_penalty + magnetic_field_increased;
 	}
+
+	public void setGravity(float gravity){this.gravity = gravity;}
 
 	public CopperCoinProjectileEntity(EntityType<CopperCoinProjectileEntity> entityType, World world) {
 		super(entityType, world);
@@ -118,6 +122,8 @@ public class CopperCoinProjectileEntity extends ThrownEntity {
 	@Override
 	public void tick() {
 		this.baseTick();
+
+		if(this.getVelocity().length() == 0 && age > 120) this.kill();
 
 		HitResult hitResult = ProjectileUtil.getCollision(this, this::canHit);
 		boolean bl = false;
@@ -258,11 +264,13 @@ public class CopperCoinProjectileEntity extends ThrownEntity {
 	private static final TrackedData<Boolean> MULTISHOT_COPY = DataTracker.registerData(CopperCoinProjectileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	private static final TrackedData<Integer> PIERCE = DataTracker.registerData(CopperCoinProjectileEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<String> POUCH_TYPE = DataTracker.registerData(CopperCoinProjectileEntity.class, TrackedDataHandlerRegistry.STRING);
+	private static final TrackedData<Boolean> MAGNETIC_FIELD_INCREASED = DataTracker.registerData(CopperCoinProjectileEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	@Override
 	protected void initDataTracker() {
 		this.dataTracker.startTracking(MULTISHOT_COPY, false);
 		this.dataTracker.startTracking(PIERCE, 0);
 		this.dataTracker.startTracking(POUCH_TYPE, "");
+		this.dataTracker.startTracking(MAGNETIC_FIELD_INCREASED, false);
 	}
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
@@ -270,7 +278,7 @@ public class CopperCoinProjectileEntity extends ThrownEntity {
 		nbt.putBoolean("Multishot_copy", this.dataTracker.get(MULTISHOT_COPY));
 		nbt.putInt("Pierce", this.dataTracker.get(PIERCE));
 		nbt.putString("Pouch_type", this.dataTracker.get(POUCH_TYPE));
-
+		nbt.putBoolean("Magnetic_field_increase", this.dataTracker.get(MAGNETIC_FIELD_INCREASED));
 	}
 
 	@Override
@@ -279,6 +287,7 @@ public class CopperCoinProjectileEntity extends ThrownEntity {
 		this.dataTracker.set(MULTISHOT_COPY, nbt.getBoolean("Multishot_copy"));
 		this.dataTracker.set(PIERCE, nbt.getInt("Pierce"));
 		this.dataTracker.set(POUCH_TYPE, nbt.getString("Pouch_type"));
+		this.dataTracker.set(MAGNETIC_FIELD_INCREASED, nbt.getBoolean("Magnetic_field_increase"));
 	}
 
 	public boolean getMultishotCopy() {return this.dataTracker.get(MULTISHOT_COPY);}
@@ -300,4 +309,8 @@ public class CopperCoinProjectileEntity extends ThrownEntity {
 	public void setPouchType(String pouchType) {
 		this.dataTracker.set(POUCH_TYPE, pouchType);
 	}
+
+	public boolean getMagneticFieldIncrease() {return this.dataTracker.get(MAGNETIC_FIELD_INCREASED);}
+
+	public void setMagneticFieldIncrease(boolean magneticFieldIncrease) {this.dataTracker.set(MAGNETIC_FIELD_INCREASED, magneticFieldIncrease);}
 }

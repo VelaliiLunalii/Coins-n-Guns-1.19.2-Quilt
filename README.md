@@ -4,7 +4,7 @@ Intricate and vanilla-friendly ranged weapons and ammo system.
 
 ## Description
 
-This mod adds a whole new and complex new ranged weapon: the gilded pistol, while staying as balanced and vanilla-friendly as possible.
+This mod adds an intuitive but complex ranged weapon: the gilded pistol, while staying as balanced and vanilla-friendly as possible.
 
 The pistol has 108 unique ways to use it through different mutually exclusive enchantments, ammo types and added effects.
 

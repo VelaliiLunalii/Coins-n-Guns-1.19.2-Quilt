@@ -1,5 +1,6 @@
 package io.github.velaliilunalii.coins_n_guns;
 
+import io.github.velaliilunalii.coins_n_guns.block.ModBlockEntities;
 import io.github.velaliilunalii.coins_n_guns.block.ModBlocks;
 import io.github.velaliilunalii.coins_n_guns.enchantment.ModEnchantments;
 import io.github.velaliilunalii.coins_n_guns.entity.ModEntities;
@@ -27,5 +28,6 @@ public class CoinsNGuns implements ModInitializer {
 		ModSounds.register();
 		ModEnchantments.register();
 		ModParticles.register();
+		ModBlockEntities.register();
 	}
 }

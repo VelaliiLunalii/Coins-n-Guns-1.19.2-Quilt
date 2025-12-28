@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "coins_n_guns:block/magnetic_coil_top",
+    "side": "coins_n_guns:block/magnetic_coil"
+  }
+}

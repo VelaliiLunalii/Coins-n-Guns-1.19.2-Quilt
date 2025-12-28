@@ -14,5 +14,6 @@ public class ModEntityRenderers {
 		EntityModelLayerRegistry.registerModelLayer(IronCoinProjectileModel.COIN, IronCoinProjectileModel::getTexturedModelData);
 		EntityRendererRegistry.register(ModEntities.COPPER_COIN_PROJECTILE, CopperCoinProjectileRenderer::new);
 		EntityModelLayerRegistry.registerModelLayer(CopperCoinProjectileModel.COIN, CopperCoinProjectileModel::getTexturedModelData);
+		EntityRendererRegistry.register(ModEntities.MAGNETIC_FIELD, MagneticFieldEntityRenderer::new);
 	}
 }

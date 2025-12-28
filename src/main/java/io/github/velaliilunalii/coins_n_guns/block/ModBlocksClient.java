@@ -11,5 +11,7 @@ public class ModBlocksClient {
 		BlockRenderLayerMap.INSTANCE.putBlock(COPPER_COIN_PILE, RenderLayer.getCutoutMipped());
 		BlockRenderLayerMap.INSTANCE.putBlock(IRON_COIN_PILE, RenderLayer.getCutoutMipped());
 		BlockRenderLayerMap.INSTANCE.putBlock(GOLD_COIN_PILE, RenderLayer.getCutoutMipped());
+		BlockRenderLayerMap.INSTANCE.putBlock(PHASE_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(INVERTED_PHASE_BLOCK, RenderLayer.getTranslucent());
 	}
 }

@@ -4,16 +4,13 @@
     "I": {
       "item": "minecraft:iron_ingot"
     },
-    "R": {
-      "item": "minecraft:redstone"
-    },
-    "L": {
-      "item": "minecraft:lapis_lazuli"
+    "M": {
+      "item": "coins_n_guns:magnetite"
     }
   },
   "pattern": [
-    " L ",
-    "I R",
+    " M ",
+    "I M",
     "II "
   ],
   "result": {
